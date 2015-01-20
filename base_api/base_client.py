@@ -94,7 +94,11 @@ def _list_to_tags(l):
 
 
 class BaseAPIService(object):
-
+    def __init__(self, token, format='json'):
+        self.base_url = 'https://sales.futuresimple.com/api/v1/'
+        self.header = {"X-Pipejump-Auth": token}
+        self.auth_failed = False
+    '''
     def __init__(self, email, password, format='json'):
         """
         Gets a login token for base, and set the format for response objects.
@@ -163,6 +167,7 @@ class BaseAPIService(object):
         data = response.read()
 
         return data
+    '''
 
     ##########################
     # Deals Functions
