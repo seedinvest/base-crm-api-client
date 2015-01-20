@@ -96,6 +96,12 @@ def _list_to_tags(l):
 class BaseAPIService(object):
     def __init__(self, token, format='json'):
         self.base_url = 'https://sales.futuresimple.com/api/v1/'
+
+        if format == 'json':
+            self.format = '.json'
+        elif format == 'xml':
+            self.format = '.xml'
+
         self.header = {"X-Pipejump-Auth": token}
         self.auth_failed = False
     '''
