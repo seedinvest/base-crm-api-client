@@ -19,7 +19,7 @@ under the License.
 import urllib
 import urllib2
 import logging
- 
+
 import json
 
 logger = logging.getLogger(__name__)
@@ -302,6 +302,14 @@ class BaseAPIService(object):
 
         return data
 
+    def get_deal_notes(self, deal_id):
+        """
+        Get notes associated with a specific deal (defined by Base's unique deal_id)
+        with the content note_content.
+        Returns a json or xml response.
+        """
+        return self._get_deal_notes(deal_id=deal_id)
+
     def create_deal_note(self, deal_id, note_content):
         """
         Creates a note associated with a specific deal (defined by Base's unique deal_id)
@@ -317,6 +325,23 @@ class BaseAPIService(object):
         Returns a json or xml response.
         """
         return self._post_deal_note(deal_id=deal_id, note_content=note_content, note_id=note_id)
+
+    def _get_deal_notes(self, deal_id, force_json=False):
+        """
+        Gets the deal notes with the given deal_id.  Returns the deal notes.
+        Allows for forcing of json data if we need to update specific fields.
+        """
+        if force_json:
+            deal_notes_url = 'deals/%s/notes%s' % (deal_id, '.json')
+        else:
+            deal_notes_url = 'deals/%s/notes%s' % (deal_id, self.format)
+
+        url = self.base_url + deal_notes_url
+        req = urllib2.Request(url, headers=self.header)
+        response = urllib2.urlopen(req)
+        data = response.read()
+
+        return data
 
     def _post_deal_note(self, deal_id, note_content='', note_id=None):
         """
@@ -474,6 +499,13 @@ class BaseAPIService(object):
 
         return data
 
+    def get_contact_notes(self, contact_id):
+        """
+        Gets notes associated with a specific coontact (defined by Base's uinique contact_id)
+        Returns a json or xml response.
+        """
+        return self._get_contact_notes(contact_id=contact_id)
+
     def create_contact_note(self, contact_id, note_content):
         """
         Creates a note associated with a specific contact (defined by Base's unique contact_id)
@@ -489,6 +521,23 @@ class BaseAPIService(object):
         Returns a json or xml response.
         """
         return self._post_contact_note(contact_id=contact_id, note_content=note_content, note_id=note_id)
+
+    def _get_contact_notes(self, contact_id, force_json=False):
+        """
+        Gets notes for a given contact_id with content note_content, if note_id == None.
+        Otherwise, edits the note with the given note_id.
+        """
+        if force_json:
+            contact_notes_url = 'contacts/%s/notes%s' % (contact_id, '.json')
+        else:
+            contact_notes_url = 'contacts/%s/notes%s' % (contact_id, self.format)
+
+        url = self.base_url + contact_notes_url
+        req = urllib2.Request(url, headers=self.header)
+        response = urllib2.urlopen(req)
+        data = response.read()
+
+        return data
 
     def _post_contact_note(self, contact_id, note_content='', note_id=None):
         """
