@@ -326,6 +326,13 @@ class BaseAPIService(object):
         """
         return self._post_deal_note(deal_id=deal_id, note_content=note_content, note_id=note_id)
 
+    def delete_deal_note(self, deal_id, note_id):
+        """
+        Deletes a note (defined by Base's unique deal_id and the note's unique note_id)
+        Returns a json or xml response.
+        """
+        return self._delete_deal_note(deal_id=deal_id, note_id=note_id)
+
     def _get_deal_notes(self, deal_id, force_json=False):
         """
         Gets the deal notes with the given deal_id.  Returns the deal notes.
@@ -367,6 +374,25 @@ class BaseAPIService(object):
 
         return data
 
+    def _delete_deal_note(self, deal_id, note_id=None):
+        """
+        PRIVATE FUNCTION
+        Delets a  note for a given deal_id with content note_content, if note_id == None.
+        Otherwise, edits the note with the given note_id.
+        """
+
+        url_base_template = 'deals/%s/notes' % str(deal_id)
+        url_base_template += '/%s' % str(note_id)
+        url_base_template += self.format
+
+        url = self.base_url + url_base_template
+
+        req = urllib2.Request(url, headers=self.header)
+        req.get_method = lambda: 'DELETE'
+        response = urllib2.urlopen(req)
+        data = response.read()
+
+        return data
     ##########################
     # Contact Functions
     ##########################
@@ -522,6 +548,13 @@ class BaseAPIService(object):
         """
         return self._post_contact_note(contact_id=contact_id, note_content=note_content, note_id=note_id)
 
+    def delete_contact_note(self, contact_id, note_id):
+        """
+        Deletes a note (defined by Base's unique deal_id and the note's unique note_id)
+        Returns a json or xml response.
+        """
+        return self._delete_contact_note(contact_id=contact_id, note_id=note_id)
+
     def _get_contact_notes(self, contact_id, force_json=False):
         """
         Gets notes for a given contact_id with content note_content, if note_id == None.
@@ -563,6 +596,25 @@ class BaseAPIService(object):
 
         return data
 
+    def _delete_contact_note(self, contact_id, note_id=None):
+        """
+        PRIVATE FUNCTION
+        Deletes a  note for a given contact_id with content note_content, if note_id == None.
+        Otherwise, edits the note with the given note_id.
+        """
+
+        url_base_template = 'contacts/%s/notes' % str(contact_id)
+        url_base_template += '/%s' % str(note_id)
+        url_base_template += self.format
+
+        url = self.base_url + url_base_template
+
+        req = urllib2.Request(url, headers=self.header)
+        req.get_method = lambda: 'DELETE'
+        response = urllib2.urlopen(req)
+        data = response.read()
+
+        return data
     ##########################
     # Sources Functions
     ##########################
