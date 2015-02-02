@@ -178,7 +178,7 @@ class BaseAPIService(object):
     ##########################
     # Deals Functions
     ##########################
-    def get_deals(self, page=1, stage='incoming'):
+    def get_deals(self, page=1, stage='incoming', name=''):
         """
         Gets deal objects in batches of 20.
         Arguments:
@@ -189,6 +189,8 @@ class BaseAPIService(object):
         url = self.base_url + deals_url
         params = urllib.urlencode({
             'page': page,
+            'term': name,
+            'tags': 'Deals',
             'stage': stage,
         })
 
@@ -199,6 +201,7 @@ class BaseAPIService(object):
         data = response.read()
 
         return data
+
 
     def get_deal(self, deal_id):
         """
@@ -420,6 +423,12 @@ class BaseAPIService(object):
         """
         return self._get_contact(contact_id=contact_id)
 
+    def get_contact_deals(self, contact_id):
+        """
+        Gets the contact with the given contact_id.  Returns teh contact info.
+        """
+        return self._get_contact_deals(contact_id=contact_id)
+
     def create_contact(self, contact_info, person=True):
         """
         Creates a new contact based on contact_info with fields shown in CONTACT_PARAMS.
@@ -475,6 +484,23 @@ class BaseAPIService(object):
             contact_url = 'contacts/%s%s' % (contact_id, '.json')
         else:
             contact_url = 'contacts/%s%s' % (contact_id, self.format)
+
+        url = self.base_url + contact_url
+        req = urllib2.Request(url, headers=self.header)
+        response = urllib2.urlopen(req)
+        data = response.read()
+
+        return data
+
+    def _get_contact_deals(self, contact_id, force_json=False):
+        """
+        Gets the contact with the given contact_id.  Returns the contact info.
+        Allows for forcing of json data if we need to update specific fields.
+        """
+        if force_json:
+            contact_url = 'contacts/%s/deals%s' % (contact_id, '.json')
+        else:
+            contact_url = 'contacts/%s/deals%s' % (contact_id, self.format)
 
         url = self.base_url + contact_url
         req = urllib2.Request(url, headers=self.header)
