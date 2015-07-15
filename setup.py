@@ -5,7 +5,7 @@ setup(
     name="base-crm-api-client",
 
     # Version number (initial):
-    version="0.1.0",
+    version="0.1.1",
 
     # Packages
     packages=["base_api"],
