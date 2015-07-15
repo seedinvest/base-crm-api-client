@@ -178,7 +178,7 @@ class BaseAPIService(object):
     ##########################
     # Deals Functions
     ##########################
-    def get_deals(self, page=1, stage='incoming', name=''):
+    def get_deals(self, page=1, stage='incoming', name='', tags='Deals'):
         """
         Gets deal objects in batches of 20.
         Arguments:
@@ -190,8 +190,9 @@ class BaseAPIService(object):
         params = urllib.urlencode({
             'page': page,
             'term': name,
-            'tags': 'Deals',
+            'tags': tags,
             'stage': stage,
+            'per_page': 100,
         })
 
         full_url = url + '?' + params
